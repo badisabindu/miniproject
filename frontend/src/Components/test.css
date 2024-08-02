@@ -1,0 +1,12 @@
+/* src/Components/SearchPage.css */
+.custom-carousel-control-prev-icon,
+.custom-carousel-control-next-icon {
+  background-color: black; /* Background color behind arrows */
+  border-radius: 50%; /* Optional: Rounded corners */
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  color: black; /* Arrow color */
+  font-size: 2rem; /* Arrow size */
+}
