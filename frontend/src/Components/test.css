@@ -1,12 +1,30 @@
 /* src/Components/SearchPage.css */
-.custom-carousel-control-prev-icon,
+/* .custom-carousel-control-prev-icon,
 .custom-carousel-control-next-icon {
-  background-color: black; /* Background color behind arrows */
-  border-radius: 50%; /* Optional: Rounded corners */
+  background-color: black; 
+  border-radius: 50%;
 }
-
 .carousel-control-prev,
 .carousel-control-next {
-  color: black; /* Arrow color */
-  font-size: 2rem; /* Arrow size */
+  color: black;
+  font-size: 2rem;
+} */
+/* In your test.css file */
+.custom-carousel-control-prev, .custom-carousel-control-next {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  border-radius: 50%; /* Make it circular */
+  color: white; /* Icon color */
+}
+
+.custom-carousel-control-prev {
+  left: 10px;
+}
+
+.custom-carousel-control-next {
+  right: 10px;
 }

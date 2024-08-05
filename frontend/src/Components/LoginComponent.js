@@ -24,7 +24,7 @@ function LoginComponent() {
           localStorage.setItem('token', response.data.token);
           setMessage(response.data.message);
           alert(response.data.message);
-          navigate('/test');
+          navigate('/city');
         }  catch (error) {
             setMessage('Login failed: ' + error.response.data.message);
             alert(error.response.data.message)
