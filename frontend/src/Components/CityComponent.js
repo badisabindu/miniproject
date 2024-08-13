@@ -3,13 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button, Card, Carousel } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
 import { useState } from "react";
+ import {useAuth} from './AuthProvider.js'
+import axios from '../axiosSetup';
 // import {Button} from 'react-bootstrap'
 function CityComponent(){
-    const[city,setCity]=useState("");
+  const {city,setCity}=useAuth();
  const navigate=useNavigate();
- const handleCity=()=>{
-    
-     navigate('/search');
+ const handleCity=async()=>{
+    navigate('/search')
  }
 
 
@@ -23,10 +24,10 @@ function CityComponent(){
             <Row>
               <Col md={6} className="mb-3">
                 <Form.Group controlId="formLocation">
-                  <Form.Label>Location</Form.Label>
+                  <Form.Label>City</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Enter location"
+                    placeholder="Enter city"
                    onChange={(e) => setCity(e.target.value)}
                   />
                 </Form.Group>

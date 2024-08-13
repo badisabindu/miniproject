@@ -1,12 +1,12 @@
 
 // backend/models/User.js
 const mongoose = require('mongoose');
-import place_model from './place_model';
 
 const citySchema = new mongoose.Schema({
     name:{
         type:String,
-        required:true
+        required:true,
+        unique:true
     },
     description:{
         type:String,
@@ -15,13 +15,14 @@ const citySchema = new mongoose.Schema({
     imgUrl:{
         type:String,
         required:true
-    },
-    places: [place_model]
+    }
 });
 
 
 
 const city_model = mongoose.model("city_model", citySchema);
-
 module.exports = city_model;
 
+// module.exports = city_model;
+// import city_model from "../models/city_model";
+// city_model.create({name:"Hyderabad",description:"asdf",imgUrl:"https://th.bing.com/th?id=OIP.7IrJMGZmyQZaalL-laIdNwHaE5&w=307&h=203&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2"});
