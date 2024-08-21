@@ -1,25 +1,86 @@
 // src/Components/SearchPage.js
-import React, { useState } from 'react';
-import { Container, Row, Col, Form, Button, Card, Carousel } from 'react-bootstrap';
+import React, { useState,useEffect } from 'react';
+import { Container, Row, Col, Form, Button,} from "react-bootstrap";
+//import {Card, Carousel } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
 import './test.css';
+import {useAuth} from './AuthProvider'
+
+import axios from '../axiosSetup';
 
 const SearchComponent = () => {
+  const {city}=useAuth();
+  console.log(city);
   const [location, setLocation] = useState('');
   const [interests, setInterests] = useState('');
   const [time, setTime] = useState('');
   const [radius, setRadius] = useState('');
+  const [categories1,setCategories]=useState([])
+  const [categoryNames, setCategoryNames] = useState([]);
+  useEffect(()=>{
+    // handleCategory();
+    const handleCategory = async () => {
+      try{
+        const options = {method: 'GET', headers: {accept: 'application/json'}};
+        const response = await fetch('https://api.foursquare.com/v2/venues/categories?v=20231010&oauth_token=BMC2LNSFZWM3M1J4TXF1T1FEK1DIFZ4E5F5CCAITN4HBB4NU', options);
+        const data = await response.json(); 
+        setCategories(data.response.categories);       
+       console.log(categories1);
+      // setCategoryNames(categories1.map((category) => {
+      //  return category.name
+      // }))
+      const names = data.response.categories.map((category) => category.name);
+      setCategoryNames(names);
+      console.log(categoryNames);
+      }
+      catch(err){
+        console.log(err)
+      }
+    };
+    handleCategory();
+    const handleCity = async () => {
+      try{
+        const response = await fetch(`http://localhost:5000/cities/${city}`);
+        // const data = await response.json(); 
+        console.log(response.data.message);
+      }
+      catch(err){
+        console.log(err)
+      }
+    };
+    handleCity();
+  },[])
 
   const handleSearch = (e) => {
     e.preventDefault();
     // Handle search logic here
-    console.log({ location, interests, time, radius });
-  };
+    //console.log({ location, interests, time, radius });
+  }
+
+    // const handleCategory = async () => {
+    //   try{
+    //     const options = {method: 'GET', headers: {accept: 'application/json'}};
+    //     const response = await fetch('https://api.foursquare.com/v2/venues/categories?v=20231010&oauth_token=BMC2LNSFZWM3M1J4TXF1T1FEK1DIFZ4E5F5CCAITN4HBB4NU', options);
+    //     const data = await response.json(); 
+    //     setCategories(data.response.categories);       
+    //    console.log(categories1);
+    //   setCategoryNames(categories1.map((category) => {
+    //    return category.name
+    //   }))
+    //   console.log(categoryNames);
+    //   }
+    //   catch(err){
+    //     console.log(err)
+    //   }
+    // };
+
+
   
 
   return (
     <Container className="mt-5">
       <Row className="mb-4">
+      
         <Col>
           <h1 className="text-center mb-4">Find Your Next Adventure</h1>
           <Form onSubmit={handleSearch}>
@@ -51,14 +112,19 @@ const SearchComponent = () => {
     as="select"
     value={interests}
     onChange={(e) => setInterests(e.target.value)}
+    // onClick={handleCategory}
   >
-    <option value="">Select interests</option>
+    {/* <option value="">Select interests</option>
     <option value="food">Food</option>
     <option value="hotels">Hotels</option>
     <option value="hospital">Hospitals</option>
     <option value="shopping">Shopping</option>
     <option value="theaters">Theaters</option>
-    <option value="historical sites">Historical Sites</option>
+    <option value="historical sites">Historical Sites</option> */}
+          <option value="">Select a category</option>
+          {categoryNames.map((name, index) => (
+            <option key={index} value={name}>{name}</option>
+          ))}
   </Form.Control>
 </Form.Group>
 

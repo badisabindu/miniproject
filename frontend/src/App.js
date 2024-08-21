@@ -1,28 +1,34 @@
-import './App.css';
-import LandingComponent from './Components/LandingComponent.js';
-import LoginComponent from './Components/LoginComponent'
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import LandingComponent from './Components/LandingComponent';
+import LoginComponent from './Components/LoginComponent';
 import SignupComponent from './Components/SignUpComponent';
-import HeaderComponent from './Components/HeaderComponent.js';
-import {BrowserRouter,Routes,Route} from "react-router-dom"
-import FooterComponent from './Components/FooterComponent.js';
-import SearchComponent from './Components/SearchComponent.js';
+import HeaderComponent from './Components/HeaderComponent';
+import FooterComponent from './Components/FooterComponent';
+import SearchComponent from './Components/SearchComponent';
 import CityComponent from './Components/CityComponent';
+import AuthProvider from './Components/AuthProvider';
+
 function App() {
   return (
     <BrowserRouter>
-    <HeaderComponent></HeaderComponent>
-    <Routes>
-         <Route path="/" element={<LandingComponent />}></Route>
-         <Route path="/login" element={<LoginComponent/>}></Route>
-         <Route path="/signup" element={<SignupComponent />}></Route>
-         <Route path="/city" element={<CityComponent/>}></Route>
-         <Route path="/search" element={<SearchComponent/>}></Route>
-    </Routes>
-    <FooterComponent></FooterComponent>
+      <AuthProvider>
+        <div className="d-flex flex-column min-vh-100">
+          <HeaderComponent />
+          <main className="flex-grow-1">
+            <Routes>
+              <Route path="/" element={<LandingComponent />} />
+              <Route path="/login" element={<LoginComponent />} />
+              <Route path="/signup" element={<SignupComponent />} />
+              <Route path="/city" element={<CityComponent />} />
+              <Route path="/search" element={<SearchComponent />} />
+              {/* <Route path="/test" element={<TestingComponent />} /> */}
+            </Routes>
+          </main>
+          <FooterComponent />
+        </div>
+      </AuthProvider>
     </BrowserRouter>
-    // <LoginComponent></LoginComponent>
-    // <SignupComponent></SignupComponent>
-   
   );
 }
 

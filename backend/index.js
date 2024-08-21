@@ -4,6 +4,9 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/user_routes');
+const citiesRoutes = require('./routes/city_routes');
+
+
 
 const app = express();
 const PORT = 5000; // Adjusted to match your port
@@ -22,6 +25,7 @@ mongoose.connect('mongodb://localhost:27017/userDB', {
 
 // Routes
 app.use('/api', userRoutes);
+app.use('/cities',citiesRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
