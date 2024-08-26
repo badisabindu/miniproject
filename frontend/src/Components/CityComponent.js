@@ -9,7 +9,8 @@ import axios from '../axiosSetup';
 function CityComponent(){
   const {city,setCity}=useAuth();
  const navigate=useNavigate();
- const handleCity=async()=>{
+ const handleCity=async(cityName)=>{
+  setCity(cityName);
     navigate('/search')
  }
 
@@ -33,7 +34,7 @@ function CityComponent(){
                 </Form.Group>
               </Col>
               <Col className="text-center">
-                <Button variant="primary" type="submit">
+                <Button variant="primary" type="submit" onClick={() => handleCity(city)}>
                   <FaSearch /> Search
                 </Button>
               </Col>
@@ -51,7 +52,7 @@ function CityComponent(){
             <Carousel.Item>
               <Row>
                 <Col md={3} className="mb-4">
-                  <Card>
+                  <Card onClick={() => handleCity('Hyderabad')}>
                     <Card.Img variant="top" src="https://th.bing.com/th/id/OIP.F5yrDEhTvQeHJggS-hPqNgHaEK?w=331&h=186&c=7&r=0&o=5&dpr=1.3&pid=1.7" style={{height:'200px'}}/>
                     <Card.Body>
                       <Card.Title>Hyderabad</Card.Title>
@@ -62,7 +63,7 @@ function CityComponent(){
                   </Card>
                 </Col>
                 <Col md={3} className="mb-4">
-                  <Card>
+                  <Card onClick={() => handleCity('Delhi')}>
                     <Card.Img variant="top" src="https://cdn.britannica.com/37/189837-050-F0AF383E/New-Delhi-India-War-Memorial-arch-Sir.jpg" />
                     <Card.Body>
                       <Card.Title>Delhi</Card.Title>
@@ -110,7 +111,7 @@ function CityComponent(){
                   </Card>
                 </Col>
                 <Col md={3} className="mb-4">
-                  <Card>
+                  <Card onClick={() => handleCity('Goa')}>
                     <Card.Img variant="top" src="https://media.cntraveller.in/wp-content/uploads/2016/10/arambol.jpg" />
                     <Card.Body>
                       <Card.Title>Goa</Card.Title>

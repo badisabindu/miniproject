@@ -1,11 +1,9 @@
 // src/Components/SearchPage.js
 import React, { useState,useEffect } from 'react';
-import { Container, Row, Col, Form, Button,} from "react-bootstrap";
-//import {Card, Carousel } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button,Card,Carousel} from "react-bootstrap";
 import { FaSearch } from 'react-icons/fa';
 import './test.css';
 import {useAuth} from './AuthProvider'
-
 import axios from '../axiosSetup';
 
 const SearchComponent = () => {
@@ -16,10 +14,13 @@ const SearchComponent = () => {
   const [time, setTime] = useState('');
   const [radius, setRadius] = useState('');
   const [categories1,setCategories]=useState([])
+  const [categoryCode,setCategoryCode]=useState([])
   const [categoryNames, setCategoryNames] = useState([]);
   const[latitude,setLatitude]=useState();
   const[longitude,setLongitude]=useState();
   const [cityurl,setCityurl]=useState('');
+  const [cityname,setCityname]=useState('');
+  const [citydes,setCitydes]=useState('');
   useEffect(()=>{
     // handleCategory();
     const handleCategory = async () => {
@@ -31,7 +32,10 @@ const SearchComponent = () => {
        console.log(data.response.categories);
       const names = data.response.categories.map((category) => category.name);
       setCategoryNames(names);
-      console.log(categoryNames);
+      // console.log(data.response.categories)
+      const codes = data.response.categories.map((category) => category.categoryCode);
+      setCategoryCode(codes);
+      // console.log(categoryCode);
       }
       catch(err){
         console.log(err)
@@ -44,16 +48,16 @@ const SearchComponent = () => {
       try{
         const response = await fetch(`http://localhost:5000/cities/${city}`);
         const data = await response.json(); 
-        // console.log(data.message.imgUrl);
         setCityurl(data.message.imgUrl) 
-        // console.log(cityurl);
+        setCityname(data.message.name)
+        setCitydes(data.message.description) 
       }
       catch(err){
         console.log(err)
       }
     };
     handleCity();
-  },[cityurl])
+  },[cityurl,cityname,citydes])
   useEffect(()=>{
     const handleLatLon = async () => {
       try{
@@ -76,16 +80,34 @@ const SearchComponent = () => {
     // Handle search logic here
     //console.log({ location, interests, time, radius });
   }
+  const handleInterest=(e)=>{
+    e.preventDefault();
+    setInterests(e.target.value);
 
+  }
 
   
 
   return (
     <Container className="mt-5">
+      <Row className="mb-5 align-items-center">
+        <Col md={5} className="d-flex justify-content-center">
+          <img 
+            src={cityurl} 
+            alt="City" 
+            className="img-fluid rounded shadow-lg" 
+            style={{ width: '100%', height: 'auto', maxHeight: '400px' }} 
+          />
+        </Col>
+        <Col md={7} className="d-flex flex-column justify-content-center">
+          <div className="city-info">
+            <h1 className="mb-3 text-dark">{cityname}</h1>
+            <p className="text-muted">{citydes}</p>
+          </div>
+        </Col>
+      </Row>
       <Row className="mb-4">
-      <img src={cityurl}></img>
         <Col>
-          <h1 className="text-center mb-4">Find Your Next Adventure</h1>
           <Form onSubmit={handleSearch}>
             <Row>
               <Col md={6} className="mb-3">
@@ -112,9 +134,13 @@ const SearchComponent = () => {
                 <Form.Group controlId="formInterests">
   <Form.Label>Interests</Form.Label>
   <Form.Control
+
     as="select"
     value={interests}
-    onChange={(e) => setInterests(e.target.value)}
+    onChange={
+      // (e) => setInterests(e.target.value)
+      (e)=>handleInterest(e)
+    }
     // onClick={handleCategory}
   >
           <option value="">Select a category</option>
