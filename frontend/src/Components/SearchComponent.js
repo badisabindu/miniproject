@@ -90,22 +90,28 @@ const SearchComponent = () => {
 
   return (
     <Container className="mt-5">
-      <Row className="mb-5 align-items-center">
-        <Col md={5} className="d-flex justify-content-center">
-          <img 
-            src={cityurl} 
-            alt="City" 
-            className="img-fluid rounded shadow-lg" 
-            style={{ width: '100%', height: 'auto', maxHeight: '400px' }} 
-          />
-        </Col>
-        <Col md={7} className="d-flex flex-column justify-content-center">
-          <div className="city-info">
-            <h1 className="mb-3 text-dark">{cityname}</h1>
-            <p className="text-muted">{citydes}</p>
-          </div>
-        </Col>
-      </Row>
+
+<Row className="mb-5" style={{ border: '2px solid #e0e0e0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)' }}>
+  <Col className="p-0">
+    <img 
+      src={cityurl} 
+      alt="City" 
+      className="img-fluid" 
+      style={{ width: '100%', height: 'auto', maxHeight: '500px', objectFit: 'cover' }} 
+    />
+    <Row className="p-4" style={{ backgroundColor: '#f8f9fa' }}>
+      <Col md={6} className="d-flex align-items-center">
+        <h1 className="mb-0" style={{ fontWeight: '700', fontSize: '2rem', color: '#343a40' }}>{cityname}</h1>
+      </Col>
+      <Col md={6} className="d-flex align-items-center">
+        <p className="mb-0 text-muted" style={{ fontSize: '1.1rem', lineHeight: '1.5' }}>{citydes}</p>
+      </Col>
+    </Row>
+  </Col>
+</Row>
+
+
+
       <Row className="mb-4">
         <Col>
           <Form onSubmit={handleSearch}>
