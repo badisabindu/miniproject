@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button, Container, Row, Col, Card, Carousel } from 'react-bootstrap';
 
+
 const LandingComponent = () => {
   return (
     <div>

@@ -7,7 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 function SignupComponent() {
 
-    const [username, setUsername] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');

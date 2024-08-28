@@ -4,6 +4,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar, Nav, Container } from 'react-bootstrap';
+import ProfileIcon from './ProfileIconComponent';
 
 const HeaderComponent = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -34,6 +35,9 @@ const HeaderComponent = () => {
             ) : (
               <Nav.Link as={Link} to="/" onClick={handleLogout}>Logout</Nav.Link>
             )}
+               <div style={{ position: 'absolute', right: '20px', top: '10px' }}>
+                  <ProfileIcon />
+              </div>
           </Nav>
         </Navbar.Collapse>
       </Container>
