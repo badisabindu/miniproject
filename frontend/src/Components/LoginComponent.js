@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {Link,useNavigate} from "react-router-dom";
 import React, { useState } from 'react';
 import axios from '../axiosSetup';
+import { useAuth } from './AuthProvider';
 //import {toast} from 'react-toastify';
 
 function LoginComponent() {
@@ -12,6 +13,7 @@ function LoginComponent() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState('');
+    const{setIsLoggedIn,token}=useAuth();
     //const {LoginAction} = useAuth()
     const navigate = useNavigate();
     const handleLogin = async (e) => {
@@ -21,7 +23,9 @@ function LoginComponent() {
             email,
             password,
           });
+          console.log(response)
           localStorage.setItem('token', response.data.token);
+          setIsLoggedIn(true)
           setMessage(response.data.message);
           alert(response.data.message);
           navigate('/city');

@@ -26,11 +26,17 @@ function CityComponent(){
               <Col md={6} className="mb-3">
                 <Form.Group controlId="formLocation">
                   <Form.Label>City</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter city"
-                   onChange={(e) => setCity(e.target.value)}
-                  />
+                  <Form.Control as="select" placeholder="Select city" onChange={(e) => setCity(e.target.value)}>
+                  <option value="">Select location</option>
+                  <option value="Hyderabad">Hyderabad</option>
+                  <option value="Delhi">Delhi</option>
+                  <option value="Chennai">Chennai</option>
+                  <option value="Bangalore">Bangalore</option>
+                  <option value="Jaipur">Jaipur</option>
+                  <option value="Mumbai">Mumbai</option>
+                  <option value="Kerala">Kerala</option>
+                  <option value="Jammu">Jammu</option>
+                  </Form.Control>
                 </Form.Group>
               </Col>
               <Col className="text-center">
@@ -133,10 +139,10 @@ function CityComponent(){
                   </Card>
                 </Col>
                 <Col md={3} className="mb-4">
-                  <Card onClick={() => handleCity('Kerela')}>
+                  <Card onClick={() => handleCity('Kerala')}>
                     <Card.Img variant="top" src="https://th.bing.com/th/id/R.5185474e14b2e354c11a04b988555fe5?rik=3zboFdUppXOreQ&riu=http%3a%2f%2fupload.wikimedia.org%2fwikipedia%2fcommons%2fa%2fad%2fMunnar_hillstation_kerala.jpg&ehk=89RsA86QvI%2bKv1YofdDtmyZr1BuoMpFv6cvFPEhXmo4%3d&risl=&pid=ImgRaw&r=0" style={{height:'250px'}} />
                     <Card.Body>
-                      <Card.Title>Kerela</Card.Title>
+                      <Card.Title>Kerala</Card.Title>
                       <Card.Text>
                       Kerala, India, is a tropical paradise.
                       </Card.Text>

@@ -1,57 +1,53 @@
 import { createContext, useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+// import { toast } from 'react-bootstrap';
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
     
-    // const [token, setToken] = useState(() => {
-    //     const savedToken = localStorage.getItem("token");
-    //     return savedToken ? JSON.parse(savedToken) : null;
-    // });
+    const [token, setToken] = useState(() => {
+        const savedToken = localStorage.getItem("token");
+        return savedToken ? savedToken: null;
+    });
     const [city, setCity] = useState(null);
-    // const [name,setName]=useState(null)
-    // const navigate = useNavigate();
+    const[isLoggedIn,setIsLoggedIn]=useState(!!token)
+   // const [name,setName]=useState(null)
+    const navigate = useNavigate();
 
-    // const LoginAction = async (data) => {
-    //     try {
-    //         const response = await axios.post("http://localhost:5000/signup/login", data, {
-    //             headers: {
-    //                 'Content-Type': 'application/json'
-    //             }
-    //         });
-            //setName(response.data.user.username);
-            // localStorage.setItem("userId", response.data.id);
-            // if (response.data && response.data.token) {
-            //     setToken(response.data.token);
-            //     localStorage.setItem("token", JSON.stringify(response.data.token));
-            //     navigate('/');
-            // }
-            // localStorage.setItem('role', JSON.stringify(response.data.role));
-            // if (response.data.role === "admin") {
-            //     navigate('/');
-            // } else if (response.data.role === "user") {
-            //     navigate('/');
-            // }
-            // return;
-        // } catch (err) {
-        //     console.log(err);
-        // }
-    // };
+    const LoginAction = async (data) => {
+        try {
+            const response = await axios.post("http://localhost:5000/signup/login", data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+           // setName(response.data.user.username);
+            localStorage.setItem("userId", response.data.id);
+            if (response.data && response.data.token) {
+                setToken(response.data.token);
+                localStorage.setItem("token", JSON.parse(response.data.token));
+                navigate('/city');
+            }
+            return;
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
-    // const logOut = () => {
-    //     setToken(null);
-    //     setRole(null);
-    //     localStorage.removeItem("userId");
-    //     localStorage.removeItem("token");
-    //     localStorage.removeItem("role");
-    //     toast.success('Logged out successfully'); // Success toast message
-    //     navigate('/login');
-    // };
+    const logOut = () => {
+        setToken(null);
+        setIsLoggedIn(false)
+        localStorage.removeItem("userId");
+        localStorage.removeItem("token");
+        // toast.success('Logged out successfully');
+        alert("logged out succesfully") // Success toast message
+        navigate('/login');
+    };
 
     return (
-        <AuthContext.Provider value={{ city,setCity}}>
+        <AuthContext.Provider value={{ city,setCity,LoginAction,token,logOut,isLoggedIn,setIsLoggedIn}}>
             {children}
         </AuthContext.Provider>
     );

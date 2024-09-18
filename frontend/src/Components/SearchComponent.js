@@ -29,13 +29,13 @@ const SearchComponent = () => {
         const response = await fetch('https://api.foursquare.com/v2/venues/categories?v=20231010&oauth_token=BMC2LNSFZWM3M1J4TXF1T1FEK1DIFZ4E5F5CCAITN4HBB4NU', options);
         const data = await response.json(); 
         setCategories(data.response.categories);       
-       console.log(data.response.categories);
+       //console.log(data.response.categories);
       const names = data.response.categories.map((category) => category.name);
       setCategoryNames(names);
-      // console.log(data.response.categories)
+      console.log(data.response.categories)
       const codes = data.response.categories.map((category) => category.categoryCode);
       setCategoryCode(codes);
-      // console.log(categoryCode);
+      console.log(categoryCode);
       }
       catch(err){
         console.log(err)
@@ -91,24 +91,42 @@ const SearchComponent = () => {
   return (
     <Container className="mt-5">
 
-<Row className="mb-5" style={{ border: '2px solid #e0e0e0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)' }}>
-  <Col className="p-0">
+ <Row className="mb-5" style={{ border: '2px solid #e0e0e0', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)' }}>
+  <Col md={7} className="p-3">
     <img 
       src={cityurl} 
       alt="City" 
       className="img-fluid" 
       style={{ width: '100%', height: 'auto', maxHeight: '500px', objectFit: 'cover' }} 
     />
-    <Row className="p-4" style={{ backgroundColor: '#f8f9fa' }}>
-      <Col md={6} className="d-flex align-items-center">
-        <h1 className="mb-0" style={{ fontWeight: '700', fontSize: '2rem', color: '#343a40' }}>{cityname}</h1>
-      </Col>
-      <Col md={6} className="d-flex align-items-center">
-        <p className="mb-0 text-muted" style={{ fontSize: '1.1rem', lineHeight: '1.5' }}>{citydes}</p>
-      </Col>
-    </Row>
-  </Col>
+    </Col> 
+    <Col md={5} className='p-3'>
+      <Row className="d-flex align-items-center">
+        <h1 className="mb-3" style={{ fontWeight: '700', fontSize: '2rem', color: '#343a40' }}>{cityname}</h1>
+      </Row>
+      <Row className="d-flex align-items-center">
+        <p className="text-muted" style={{ fontSize: '1.1rem', lineHeight: '1.5' }}>{citydes}</p>
+      </Row>
+    </Col>
+  
 </Row>
+
+{/* <Row className="mb-5 align-items-center">
+        <Col md={5} className="d-flex justify-content-center">
+          <img 
+            src={cityurl} 
+            alt="City" 
+            className="img-fluid rounded shadow-lg" 
+            style={{ width: '100%', height: 'auto', maxHeight: '400px' }} 
+          />
+        </Col>
+        <Col md={7} className="d-flex flex-column justify-content-center">
+          <div className="city-info">
+            <h1 className="mb-3 text-dark">{cityname}</h1>
+            <p className="text-muted">{citydes}</p>
+          </div>
+        </Col>
+      </Row> */}
 
 
 
@@ -116,8 +134,8 @@ const SearchComponent = () => {
         <Col>
           <Form onSubmit={handleSearch}>
             <Row>
-              <Col md={6} className="mb-3">
-                {/* <Form.Group controlId="formLocation">
+              {/* <Col md={6} className="mb-3">
+                 <Form.Group controlId="formLocation">
                   <Form.Label>Location</Form.Label>
                   <Form.Control
                     type="text"
@@ -125,8 +143,8 @@ const SearchComponent = () => {
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                   />
-                </Form.Group> */}
-              </Col>
+                </Form.Group> 
+              </Col> */}
               <Col md={6} className="mb-3">
                 {/* <Form.Group controlId="formInterests">
                   <Form.Label>Interests</Form.Label>
@@ -138,23 +156,13 @@ const SearchComponent = () => {
                   />
                 </Form.Group> */}
                 <Form.Group controlId="formInterests">
-  <Form.Label>Interests</Form.Label>
-  <Form.Control
-
-    as="select"
-    value={interests}
-    onChange={
-      // (e) => setInterests(e.target.value)
-      (e)=>handleInterest(e)
-    }
-    // onClick={handleCategory}
-  >
-          <option value="">Select a category</option>
-          {categoryNames.map((name, index) => (
-            <option key={index} value={name}>{name}</option>
-          ))}
-  </Form.Control>
-</Form.Group>
+                  <Form.Label>Interests</Form.Label>
+                  <Form.Control as="select" value={interests} onChange={(e)=>handleInterest(e)}>
+                  <option value="">Select a category</option>
+                   {categoryNames.map((name, index) => (
+                    <option key={index} value={name}>{name}</option>))}
+                  </Form.Control>
+                </Form.Group>
 
               </Col>
               <Col md={6} className="mb-3">
