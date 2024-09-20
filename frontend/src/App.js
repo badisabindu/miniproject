@@ -8,6 +8,7 @@ import FooterComponent from './Components/FooterComponent';
 import SearchComponent from './Components/SearchComponent';
 import CityComponent from './Components/CityComponent';
 import AuthProvider from './Components/AuthProvider';
+import ProfileEditComponent from './Components/ProfileEditComponent';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
               <Route path="/signup" element={<SignupComponent />} />
               <Route path="/city" element={<CityComponent />} />
               <Route path="/search" element={<SearchComponent />} />
+              <Route path="/profile-edit" element={<ProfileEditComponent />} />
               {/* <Route path="/test" element={<TestingComponent />} /> */}
             </Routes>
           </main>

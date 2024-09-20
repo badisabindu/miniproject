@@ -1,8 +1,12 @@
 // src/Components/LandingComponent.js
 import React from 'react';
 import { Button, Container, Row, Col, Card, Carousel } from 'react-bootstrap';
+import {useNavigate} from 'react-router-dom'
+
+
 
 const LandingComponent = () => {
+
   return (
     <div>
       <MainSection />
@@ -11,7 +15,17 @@ const LandingComponent = () => {
   );
 };
 
-const MainSection = () => (
+const MainSection = () => {
+  const navigate=useNavigate();
+  const handleStart = () => {
+    navigate('/city');  
+  };
+  const handleLearnMore=()=>{
+    const features =document.getElementById("learn")
+    features.scrollIntoView({behavior: 'smooth'});
+  }
+  return(
+    <>
   <header className="bg-primary text-white text-center d-flex align-items-center justify-content-center" style={{ height: '100vh', backgroundImage: 'url(https://wallpapers.com/images/hd/travel-the-world-r6ao4m8c15q1ok3r.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
     <Container style={{
         backgroundColor: 'rgba(255, 255, 255, 0.5)', // White background with 50% opacity
@@ -22,15 +36,18 @@ const MainSection = () => (
         <Col style={{color:"black"}}>
           <h1 className="display-4 mb-4">Welcome to Smart City Travelling</h1>
           <p className="lead mb-4"></p>
-          <Button variant="light" size="lg">Learn More</Button>
+          <Button variant="light" size="lg" onClick={handleLearnMore} style={{ marginRight: '20px' }}>Learn More</Button>
+          <Button variant="light" size="lg" onClick={handleStart}>Get Started</Button>
         </Col>
       </Row>
     </Container>
   </header>
-);
+  </>
+  );
+};
 
 const FeaturesSection = () => (
-  <section className="bg-light py-5">
+  <section id="learn" className="bg-light py-5">
     <Container>
       <Carousel style={{ backgroundColor: '#e0f7fa' }}>
         <Carousel.Item>

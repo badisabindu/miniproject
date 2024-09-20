@@ -1,11 +1,12 @@
 // backend/server.js
+require("dotenv").config()
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/user_routes');
 const citiesRoutes = require('./routes/city_routes');
-
+const uri = process.env.DBURI
 
 
 const app = express();
@@ -16,8 +17,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Database Connection
-mongoose.connect('mongodb://localhost:27017/userDB', {
-}).then(() => {
+mongoose.connect(uri).then(() => {
   console.log('Connected to MongoDB');
 }).catch((err) => {
   console.error('Failed to connect to MongoDB', err);

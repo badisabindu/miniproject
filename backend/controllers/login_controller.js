@@ -28,7 +28,7 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-// User Login
+// // User Login
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -45,11 +45,12 @@ exports.loginUser = async (req, res) => {
 
     const token = jwt.sign({ id: user._id }, 'your_jwt_secret', { expiresIn: '1h' });
 
-    res.status(200).json({ token, message: 'Login successful' });
+    res.status(200).json({ token:token,login: true,  message: 'Login successful' , id: user._id});
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 // Fetch User Details
 exports.getUserDetails = async (req, res) => {
