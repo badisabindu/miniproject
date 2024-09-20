@@ -14,7 +14,7 @@ const SearchComponent = () => {
   const [time, setTime] = useState('');
   const [radius, setRadius] = useState('');
   const [categories1,setCategories]=useState([])
-  const [categoryCode,setCategoryCode]=useState([])
+  const [categoryMap1,setCategoryMap]=useState({})
   const [categoryNames, setCategoryNames] = useState([]);
   const[latitude,setLatitude]=useState();
   const[longitude,setLongitude]=useState();
@@ -29,13 +29,18 @@ const SearchComponent = () => {
         const response = await fetch('https://api.foursquare.com/v2/venues/categories?v=20231010&oauth_token=BMC2LNSFZWM3M1J4TXF1T1FEK1DIFZ4E5F5CCAITN4HBB4NU', options);
         const data = await response.json(); 
         setCategories(data.response.categories);       
-       //console.log(data.response.categories);
+      //  console.log(categories1);
       const names = data.response.categories.map((category) => category.name);
       setCategoryNames(names);
-      console.log(data.response.categories)
-      const codes = data.response.categories.map((category) => category.categoryCode);
-      setCategoryCode(codes);
-      console.log(categoryCode);
+      // const codes = data.response.categories.map((category) => category.categoryCode);
+      // setCategoryCode(codes);
+      // console.log(categoryCode);
+      const categoryMap = new Map();
+      data.response.categories.forEach((category) => {
+        categoryMap.set(category.name, category.categoryCode);
+      });
+      setCategoryMap(categoryMap);
+      //console.log(categoryMap)
       }
       catch(err){
         console.log(err)
@@ -75,18 +80,28 @@ const SearchComponent = () => {
     handleLatLon();
   },[latitude,longitude])
 
-  const handleSearch = (e) => {
-    e.preventDefault();
+  const handleSearch = async() => {
+    // e.preventDefault();
     // Handle search logic here
-    //console.log({ location, interests, time, radius });
-  }
-  const handleInterest=(e)=>{
-    e.preventDefault();
-    setInterests(e.target.value);
+    const options = {method: 'GET', headers: {accept: 'application/json'}};
+    console.log(latitude,longitude,radius,interests,categories1)
+    // const response=await fetch(`https://api.foursquare.com/v2/search/recommendations?v=20231010&ll=${latitude}%2C${longitude}&radius=${radius}&categoryId=${interests}`, options)
+    let url=`https://api.foursquare.com/v2/search/recommendations?v=20231010&ll=${latitude}%2C${longitude}&radius=${radius}&categoryId=${interests}&oauth_token=BMC2LNSFZWM3M1J4TXF1T1FEK1DIFZ4E5F5CCAITN4HBB4NU`
+    fetch(url)
+  .then(response => response.json())
+  .then(data => {
+    // handle the data
+    console.log(data);
+  })
+  .catch(error => {
+    console.error('Error fetching data:', error);
+  });
 
+       //const data = await response.json();
+     
+        // console.log(response)
+    console.log({ interests, time, radius });
   }
-
-  
 
   return (
     <Container className="mt-5">
@@ -132,7 +147,7 @@ const SearchComponent = () => {
 
       <Row className="mb-4">
         <Col>
-          <Form onSubmit={handleSearch}>
+          <Form>
             <Row>
               {/* <Col md={6} className="mb-3">
                  <Form.Group controlId="formLocation">
@@ -157,7 +172,9 @@ const SearchComponent = () => {
                 </Form.Group> */}
                 <Form.Group controlId="formInterests">
                   <Form.Label>Interests</Form.Label>
-                  <Form.Control as="select" value={interests} onChange={(e)=>handleInterest(e)}>
+                  <Form.Control as="select" value={interests} onChange={(e) => {
+                    e.preventDefault();
+                    setInterests(categoryMap1.get(e.target.value))}}>
                   <option value="">Select a category</option>
                    {categoryNames.map((name, index) => (
                     <option key={index} value={name}>{name}</option>))}
@@ -173,7 +190,9 @@ const SearchComponent = () => {
                     min='0'
                     placeholder="Enter time available (e.g., 2 hours)"
                     value={time}
-                    onChange={(e) => setTime(e.target.value)}
+                    onChange={(e) => {
+                      e.preventDefault();
+                      setTime(e.target.value)}}
                   />
                 </Form.Group>
               </Col>
@@ -185,12 +204,14 @@ const SearchComponent = () => {
                     placeholder="Enter search radius in kilometers"
                     min='0'
                     value={radius}
-                    onChange={(e) => setRadius(e.target.value)}
+                    onChange={(e) => {
+                      e.preventDefault();
+                      setRadius(e.target.value)}}
                   />
                 </Form.Group>
               </Col>
               <Col className="text-center">
-                <Button variant="primary" type="submit">
+                <Button variant="primary" onClick={handleSearch}>
                   <FaSearch /> Search
                 </Button>
               </Col>
@@ -205,4 +226,3 @@ const SearchComponent = () => {
 };
 
 export default SearchComponent;
-
