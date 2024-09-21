@@ -81,15 +81,17 @@ const SearchComponent = () => {
   },[latitude,longitude])
 
   const handleSearch = async() => {
-    // e.preventDefault();
-    // Handle search logic here
-    const options = {method: 'GET', headers: {accept: 'application/json'}};
+    try{
+      const options = {method: 'GET', headers: {accept: 'application/json'}};
+      const response=await fetch(`https://api.foursquare.com/v2/search/recommendations?v=20231010&ll=${latitude}%2C${longitude}&radius=${radius}&categoryId=${interests}&oauth_token=BMC2LNSFZWM3M1J4TXF1T1FEK1DIFZ4E5F5CCAITN4HBB4NU`, options)
+      const data=await response.json()
+      console.log(data)
+      console.log({ interests, time, radius });
+    }
+    catch(err){
+      console.log(err);
+    }
 
-const response=await fetch(`https://api.foursquare.com/v2/search/recommendations?v=20231010&ll=${latitude}%2C${longitude}&radius=${radius}categoryId=${interests}&oauth_token=BMC2LNSFZWM3M1J4TXF1T1FEK1DIFZ4E5F5CCAITN4HBB4NU`, options)
-
-       //const data = await response.json(); 
-        console.log(response)
-    console.log({ interests, time, radius });
   }
 
   return (
