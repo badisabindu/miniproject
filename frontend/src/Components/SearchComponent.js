@@ -216,5 +216,9 @@ const SearchComponent = () => {
   );
 };
 
+<<<<<<< HEAD
 export default SearchComponent;
 
+=======
+export default SearchComponent;
+>>>>>>> e82995ae0cc200d8cb1aca76c69ac044bcd040cd

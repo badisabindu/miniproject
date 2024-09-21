@@ -6,7 +6,6 @@ import {useNavigate} from 'react-router-dom'
 
 
 const LandingComponent = () => {
-
   return (
     <div>
       <MainSection />

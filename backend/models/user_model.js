@@ -44,7 +44,11 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
+<<<<<<< HEAD
 const user_model = mongoose.model("users", userSchema);
+=======
+const user_model = mongoose.model("user_model", userSchema);
+>>>>>>> e82995ae0cc200d8cb1aca76c69ac044bcd040cd
 
 module.exports = user_model;
 
