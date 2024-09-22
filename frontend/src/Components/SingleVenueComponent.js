@@ -4,17 +4,16 @@ import { useParams } from "react-router-dom";
 
 function VenueComponent(){
     
-    const params=useParams();
+    const {id}=useParams();
     const [imgUrl,setImgUrl]=useState('');
     const [venueName,setVenueName]=useState('');
 
     useEffect(()=>{
         const handleVenue = async ()=>{
             try{
-                const id={params};
                 console.log(id);
                 const options = {method: 'GET', headers: {accept: 'application/json'}};
-                const response=await fetch(`https://api.foursquare.com/v2/venues/4bc95d44fb84c9b6d5101b3e/?v=20231010&oauth_token=BMC2LNSFZWM3M1J4TXF1T1FEK1DIFZ4E5F5CCAITN4HBB4NU`, options);
+                const response=await fetch(`https://api.foursquare.com/v2/venues/${id}/?v=20231010&oauth_token=BMC2LNSFZWM3M1J4TXF1T1FEK1DIFZ4E5F5CCAITN4HBB4NU`, options);
                 const data=await response.json();
                 console.log(data.response);
                 const pic=data.response.venue.bestPhoto;

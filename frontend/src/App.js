@@ -10,6 +10,7 @@ import CityComponent from './Components/CityComponent';
 import AuthProvider from './Components/AuthProvider';
 import ProfileEditComponent from './Components/ProfileEditComponent';
 import SingleVenueComponent from './Components/SingleVenueComponent';
+import VenuesComponent from './Components/VenuesComponent';
 
 function App() {
   return (
@@ -25,7 +26,8 @@ function App() {
               <Route path="/city" element={<CityComponent />} />
               <Route path="/search" element={<SearchComponent />} />
               <Route path="/profile-edit" element={<ProfileEditComponent />} />
-              <Route path='/venue' element={<SingleVenueComponent/>}/>
+              <Route path='/venue/:id' element={<SingleVenueComponent/>}/>
+              <Route path="/venues/:lat/:long/:r/:catId"  element={<VenuesComponent/>}/>
               {/* <Route path="/test" element={<TestingComponent />} /> */}
             </Routes>
           </main>
