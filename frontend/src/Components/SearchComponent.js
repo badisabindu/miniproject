@@ -11,6 +11,7 @@ const SearchComponent = () => {
   // console.log(city);
 
   const [interests, setInterests] = useState('');
+  const [interestsid,setInterestsId]=useState('');
   const [time, setTime] = useState('');
   const [radius, setRadius] = useState('');
   const [categories1,setCategories]=useState([])
@@ -97,7 +98,7 @@ const SearchComponent = () => {
   const handleSearch = async() => {
     try{
     const options = {method: 'GET', headers: {accept: 'application/json'}};
-    let url=`https://api.foursquare.com/v2/search/recommendations?v=20231010&ll=${latitude}%2C${longitude}&radius=${radius*1000}&categoryId=${interests}&oauth_token=BMC2LNSFZWM3M1J4TXF1T1FEK1DIFZ4E5F5CCAITN4HBB4NU`
+    let url=`https://api.foursquare.com/v2/search/recommendations?v=20231010&ll=${latitude}%2C${longitude}&radius=${radius*10000}&categoryId=${interestsid}&oauth_token=BMC2LNSFZWM3M1J4TXF1T1FEK1DIFZ4E5F5CCAITN4HBB4NU`
     const response=await fetch(url,options)
     const data=await response.json();
     console.log(data.response.group.results)
@@ -178,14 +179,15 @@ const SearchComponent = () => {
                 </Form.Group> */}
                 <Form.Group controlId="formInterests">
                   <Form.Label>Interests</Form.Label>
-                  <Form.Control as="select" value={interests} onChange={(e) => {
+                  <Form.Control as="select" value={interests} placeholder='Select a category' onChange={(e) => {
                     e.preventDefault();
-                    setInterests(categoryMap1.get(e.target.value))}}>
+                    setInterests(e.target.value);
+                    setInterestsId(categoryMap1.get(e.target.value))}}>
                   <option value="">Select a category</option>
                    {categoryNames.map((name, index) => (
                     <option key={index} value={name}>{name}</option>))}
                   </Form.Control>
-                </Form.Group>
+                </Form.Group> 
 
               </Col>
               <Col md={6} className="mb-3">
@@ -204,7 +206,7 @@ const SearchComponent = () => {
               </Col>
               <Col md={6} className="mb-3">
                 <Form.Group controlId="formRadius">
-                  <Form.Label>Radius (km)</Form.Label>
+                  <Form.Label>Radius (km in 10000)</Form.Label>
                   <Form.Control
                     type="number"
                     placeholder="Enter search radius in kilometers"
