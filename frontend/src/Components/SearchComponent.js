@@ -104,7 +104,7 @@ const SearchComponent = () => {
     console.log(data.response.group.results)
     }
     catch(err){
-      console.error('Error fetching data:');
+      console.error('Error fetching data:',err);
     }
     console.log({ interests, time, radius });
   }
