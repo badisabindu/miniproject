@@ -13,6 +13,7 @@ const AuthProvider = ({ children }) => {
     });
     const [city, setCity] = useState(null);
     const[isLoggedIn,setIsLoggedIn]=useState(!!token)
+    const[venueId,setVenueId]=useState([])
    // const [name,setName]=useState(null)
     const navigate = useNavigate();
 
@@ -47,7 +48,7 @@ const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ city,setCity,LoginAction,token,logOut,isLoggedIn,setIsLoggedIn}}>
+        <AuthContext.Provider value={{ city,setCity,LoginAction,token,logOut,isLoggedIn,setIsLoggedIn,venueId,setVenueId}}>
             {children}
         </AuthContext.Provider>
     );

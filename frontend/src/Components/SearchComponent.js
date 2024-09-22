@@ -5,9 +5,11 @@ import { FaSearch } from 'react-icons/fa';
 import './test.css';
 import {useAuth} from './AuthProvider'
 import axios from '../axiosSetup';
+import { useNavigate } from 'react-router-dom';
 
 const SearchComponent = () => {
-  const {city}=useAuth();
+  const {city,setVenueId}=useAuth();
+  const navigate=useNavigate();
   // console.log(city);
 
   const [interests, setInterests] = useState('');
@@ -80,30 +82,17 @@ const SearchComponent = () => {
     handleLatLon();
   },[latitude,longitude])
 
-  // const handleSearch = async() => {
-  //   try{
-  //     const options = {method: 'GET', headers: {accept: 'application/json'}};
-  //     setRadius(Number(radius*10000))
-  //     const response=await fetch(`https://api.foursquare.com/v2/search/recommendations?v=20231010&ll=${latitude}%2C${longitude}&radius=${radius}&categoryId=${interests}&oauth_token=BMC2LNSFZWM3M1J4TXF1T1FEK1DIFZ4E5F5CCAITN4HBB4NU`, options)
-  //     const data=await response.json()
-  //     console.log(data)
-  //     console.log({ interests, time, radius });
-  //   }
-  //   catch(err){
-  //     console.log(err);
-  //   }
-
-  // }
   const handleSearch = async() => {
     try{
     const options = {method: 'GET', headers: {accept: 'application/json'}};
-    let url=`https://api.foursquare.com/v2/search/recommendations?v=20231010&ll=${latitude}%2C${longitude}&radius=${radius*1000}&categoryId=${interests}&oauth_token=BMC2LNSFZWM3M1J4TXF1T1FEK1DIFZ4E5F5CCAITN4HBB4NU`
+    let url=`https://api.foursquare.com/v2/search/recommendations?v=20231010&ll=${latitude}%2C${longitude}&radius=${radius*10000}&categoryId=${interests}&oauth_token=BMC2LNSFZWM3M1J4TXF1T1FEK1DIFZ4E5F5CCAITN4HBB4NU`
     const response=await fetch(url,options)
     const data=await response.json();
-    console.log(data.response.group.results)
+   console.log(data.response.group.results)
+   navigate(`/venues/${latitude}/${longitude}/${radius}/${interests}`)
     }
     catch(err){
-      console.error('Error fetching data:');
+      console.error('Error fetching data:',err);
     }
     console.log({ interests, time, radius });
   }
