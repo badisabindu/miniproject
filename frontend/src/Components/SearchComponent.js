@@ -5,10 +5,12 @@ import { FaSearch } from 'react-icons/fa';
 import './test.css';
 import {useAuth} from './AuthProvider'
 import axios from '../axiosSetup';
+import { useNavigate } from 'react-router-dom';
 
 const SearchComponent = () => {
   const {city}=useAuth();
   // console.log(city);
+  const navigate=useNavigate();
 
   const [interests, setInterests] = useState('');
   const [interestsid,setInterestsId]=useState('');
@@ -102,6 +104,7 @@ const SearchComponent = () => {
     const response=await fetch(url,options)
     const data=await response.json();
     console.log(data.response.group.results)
+    // navigate('/venue');
     }
     catch(err){
       console.error('Error fetching data:',err);
