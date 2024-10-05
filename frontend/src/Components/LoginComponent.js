@@ -13,7 +13,7 @@ function LoginComponent() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState('');
-    const{setIsLoggedIn,token}=useAuth();
+    const{setIsLoggedIn}=useAuth();
     //const {LoginAction} = useAuth()
     const navigate = useNavigate();
     const handleLogin = async (e) => {
@@ -24,6 +24,7 @@ function LoginComponent() {
             password,
           });
           console.log(response)
+          localStorage.setItem('userId',response.data.id);
           localStorage.setItem('token', response.data.token);
           setIsLoggedIn(true)
           setMessage(response.data.message);
