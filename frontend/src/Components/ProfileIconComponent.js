@@ -8,7 +8,7 @@ const ProfileIcon = () => {
   return (
     <div className="d-flex align-items-center">
         <Link to="/profile-edit">
-            <i className="bi bi-person-circle" style={{ fontSize: '1.75rem', color: "#ffffff" }}></i>
+            <i className="bi bi-person-circle mr-3" style={{ fontSize: '1.75rem', color: "#ffffff" }}></i>
             <span className="ml-3" style={{color:"#add8e6"}}>Your Name</span>
       </Link>
     </div>
