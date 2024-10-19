@@ -69,9 +69,9 @@
 
 // export default VenueComponent;
 import React, { useEffect, useState } from "react";
-import { Card, ProgressBar, Row, Col } from "react-bootstrap";
+import { Card, Accordion, Row, Col, Badge, OverlayTrigger, Tooltip, Spinner } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import { FaThumbsUp, FaThumbsDown, FaClock } from "react-icons/fa";
+import { FaStar, FaStarHalfAlt, FaRegStar, FaThumbsUp, FaThumbsDown, FaClock } from "react-icons/fa";
 
 function VenueComponent() {
   const { id } = useParams();
@@ -81,19 +81,17 @@ function VenueComponent() {
   useEffect(() => {
     const handleVenue = async () => {
       try {
-        const options = {
-          method: "GET",
-          headers: { accept: "application/json" },
-        };
+        const options = { method: "GET", headers: { accept: "application/json" } };
         const response = await fetch(
           `https://api.foursquare.com/v2/venues/${id}/?v=20231010&oauth_token=BMC2LNSFZWM3M1J4TXF1T1FEK1DIFZ4E5F5CCAITN4HBB4NU`,
           options
         );
         const data = await response.json();
         const fetchedVenue = data.response.venue;
+        console.log(fetchedVenue);
         setVenue(fetchedVenue);
 
-        if (fetchedVenue && fetchedVenue.location && fetchedVenue.location.formattedAddress) {
+        if (fetchedVenue?.location?.formattedAddress) {
           setFormatAdd(fetchedVenue.location.formattedAddress);
         }
       } catch (err) {
@@ -103,114 +101,165 @@ function VenueComponent() {
     handleVenue();
   }, [id]);
 
-  if (!venue) {
-    return <div>Loading...</div>;
-  }
+  const renderStars = (rating) => {
+    const stars = [];
+    const scaledRating = rating / 2; // Convert rating to a scale of 5
+    for (let i = 1; i <= 5; i++) {
+      if (i <= Math.floor(scaledRating)) {
+        stars.push(<FaStar key={i} className="me-1 text-warning" />);
+      } else if (i - 0.5 === scaledRating) {
+        stars.push(<FaStarHalfAlt key={i} className="me-1 text-warning" />);
+      } else {
+        stars.push(<FaRegStar key={i} className="me-1 text-muted" />);
+      }
+    }
+    return stars;
+  };
 
-  // Function to format timeframes
   const renderTimeFrames = () => {
-    if (venue.popular && venue.popular.timeframes) {
-      return venue.popular.timeframes.map((timeframe, index) => (
-        <div key={index} className="d-flex align-items-center mb-2">
-          <FaClock className="me-2" /> {/* Adding clock icon */}
-          <strong>{timeframe.days}:</strong>
-          {timeframe.open.map((time, idx) => (
-            <span key={idx} className="ms-2">{time.renderedTime}</span>
+    if (venue.popular?.timeframes) {
+      return (
+        <Accordion defaultActiveKey="0" className="mt-3">
+          {venue.popular.timeframes.map((timeframe, index) => (
+            <Accordion.Item eventKey={index.toString()} key={index}>
+              <Accordion.Header>
+                <FaClock className="me-2" /> {timeframe.days}
+              </Accordion.Header>
+              <Accordion.Body>
+                {timeframe.open.map((time, idx) => (
+                  <div key={idx} className="ms-2">
+                    <FaClock className="me-2" />
+                    {time.renderedTime}
+                  </div>
+                ))}
+              </Accordion.Body>
+            </Accordion.Item>
           ))}
-        </div>
-      ));
+        </Accordion>
+      );
     }
     return <div>No time frames available</div>;
   };
 
-  // Function to render photos in a grid
-  const renderPhotos = () => {
-    if (venue.photos && venue.photos.groups[0] && venue.photos.groups[0].items.length > 0) {
-      return (
-        <Row className="mt-4">
-          {venue.photos.groups[0].items.map((photo, index) => (
-            <Col md={6} className="mb-4" key={index}>
-              <img
-                src={`${photo.prefix}${photo.width}x${photo.height}${photo.suffix}`}
-                alt={`Photo by ${photo.user.firstName} ${photo.user.lastName}`}
-                className="img-fluid rounded" // Bootstrap classes for responsive image and rounded corners
-              />
-              <p className="text-center mt-2">
-                <small>Photo by {photo.user.firstName} {photo.user.lastName}</small>
-              </p>
-            </Col>
-          ))}
-        </Row>
-      );
-    }
-    return <div>No photos available</div>;
+  // Loading component
+  const LoadingComponent = () => {
+    return (
+      <div className="d-flex flex-column justify-content-center align-items-center" style={{ height: "100vh" }}>
+        <Spinner animation="border" role="status" variant="primary" style={{ width: '3rem', height: '3rem' }}>
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+        <h3 className="mt-3" style={{ fontFamily: "Arial, sans-serif", fontWeight: "bold", color: "#007bff" }}>
+          Loading, please wait...
+        </h3>
+        <p className="text-muted" style={{ animation: "fadeIn 1.5s infinite" }}>
+          Fetching your venue details...
+        </p>
+
+        {/* CSS Animation */}
+        <style>
+          {`
+            @keyframes fadeIn {
+              0% { opacity: 0; }
+              50% { opacity: 1; }
+              100% { opacity: 0; }
+            }
+          `}
+        </style>
+      </div>
+    );
   };
+
+  if (!venue) {
+    return <LoadingComponent />;
+  }
 
   return (
     <div className="container mt-5">
       <Card className="mb-3 mx-auto" style={{ maxWidth: "800px" }}>
-        {/* Displaying Venue Image in Center */}
         <div className="text-center">
-          {venue.photos && venue.photos.groups[0] && venue.photos.groups[0].items[0] ? (
+          {venue.photos?.groups[0]?.items[0] ? (
             <Card.Img
               variant="top"
               src={`${venue.photos.groups[0].items[0].prefix}${venue.photos.groups[0].items[0].width}x${venue.photos.groups[0].items[0].height}${venue.photos.groups[0].items[0].suffix}`}
               style={{ height: "400px", objectFit: "cover", width: "100%" }}
             />
           ) : (
-            <div
-              className="d-flex align-items-center justify-content-center bg-light"
-              style={{ height: "400px", width: "100%" }}
-            >
+            <div className="d-flex align-items-center justify-content-center bg-light" style={{ height: "400px", width: "100%" }}>
               No Image Available
             </div>
           )}
         </div>
 
         <Card.Body>
-          {/* Displaying Venue Name */}
           <Card.Title className="text-center fs-3">{venue.name}</Card.Title>
-
-          {/* Displaying Venue Address */}
           <Card.Text className="text-center fs-5">
             {formatAdd.length > 0 ? formatAdd.join(", ") : "No address available"}
           </Card.Text>
 
-          {/* Displaying Likes, Dislikes, and Rating */}
+          <div className="d-flex justify-content-center my-3">
+            <OverlayTrigger
+              placement="top"
+              overlay={<Tooltip>Based on user ratings out of 5</Tooltip>}
+            >
+              <div className="d-flex align-items-center">
+                {renderStars(venue.rating || 0)}
+                <Badge
+                  bg={
+                    venue.rating > 8
+                      ? "success"
+                      : venue.rating > 5
+                      ? "warning"
+                      : "danger"
+                  }
+                  className="ms-3 fs-6"
+                >
+                  {venue.rating ? (venue.rating / 2).toFixed(1) : "N/A"} / 5
+                </Badge>
+              </div>
+            </OverlayTrigger>
+          </div>
+
           <div className="d-flex justify-content-around my-3">
             <div className="d-flex align-items-center">
-              <FaThumbsUp className="me-2" /> <strong>Likes: </strong> {venue.likes ? venue.likes.count : 0}
+              <FaThumbsUp className="me-2 text-success" />
+              <strong>Likes: </strong> {venue.likes?.count || 0}
             </div>
             <div className="d-flex align-items-center">
-              <FaThumbsDown className="me-2" /> <strong>Dislikes: </strong> {venue.dislike ? "Disliked" : "No dislikes"}
-            </div>
-            <div className="d-flex align-items-center">
-              <strong>Rating: </strong> {venue.rating ? venue.rating : "No rating available"}
+              <FaThumbsDown className="me-2 text-danger" />
+              <strong>Dislikes: </strong> {venue.dislike ? "Disliked" : "No dislikes"}
             </div>
           </div>
 
-          {/* Displaying Rating Progress Bar */}
-          {venue.rating && (
-            <ProgressBar
-              now={venue.rating * 10}
-              label={`${venue.rating}/10`}
-              variant={venue.rating > 7 ? "success" : venue.rating > 4 ? "warning" : "danger"}
-              className="my-3"
-            />
-          )}
-
-          {/* Displaying Time Frames */}
           <div className="my-4">
             <strong>Opening Hours:</strong>
-            {venue.popular && venue.popular.isOpen ? " Open Now" : " Closed"}
-            <div className="mt-2">{renderTimeFrames()}</div>
+            {venue.popular?.isOpen ? " Open Now" : " Closed"}
+            {renderTimeFrames()}
           </div>
+           
 
-          {/* Displaying Photos */}
           <div className="mt-4">
             <strong>Photos:</strong>
-            {renderPhotos()}
+            <Row className="mt-2">
+              {venue.photos?.groups[0]?.items.map((photo, index) => (
+                <Col md={6} className="mb-4" key={index}>
+                  <img
+                    src={`${photo.prefix}${photo.width}x${photo.height}${photo.suffix}`}
+                    alt={`Clicked by ${photo.user.firstName} ${photo.user.lastName}`}
+                    className="img-fluid rounded"
+                    style={{ transition: 'transform 0.2s' }}
+                    onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                  />
+                  <p className="text-center mt-2">
+                    <small>
+                      Photo by {photo.user.firstName} {photo.user.lastName}
+                    </small>
+                  </p>
+                </Col>
+              ))}
+            </Row>
           </div>
+
         </Card.Body>
       </Card>
     </div>
@@ -218,3 +267,4 @@ function VenueComponent() {
 }
 
 export default VenueComponent;
+

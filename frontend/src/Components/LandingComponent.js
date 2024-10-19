@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button, Container, Row, Col, Card, Carousel } from 'react-bootstrap';
 import {useNavigate} from 'react-router-dom'
+import ProfileIcon from './ProfileIconComponent';
 
 
 

@@ -54,37 +54,27 @@
 
 // export default HeaderComponent;
 import React from 'react';
-import { Link ,useNavigate} from 'react-router-dom';
-import { Navbar, Nav, Container,Button } from 'react-bootstrap';
-import ProfileIcon from './ProfileIconComponent';
+import { Link, useNavigate } from 'react-router-dom';
+import { Navbar, Nav, Container, Button } from 'react-bootstrap';
+import ProfileIcon from './ProfileIconComponent'; // Make sure this path is correct
 import { useAuth } from './AuthProvider';
-import { useState,useEffect } from 'react';
 
 const HeaderComponent = () => {
-  const { token, logOut ,isLoggedIn} = useAuth();
-  const navigate=useNavigate();
-  //const [isLoggedIn, setIsLoggedIn] = useState(!!token);
-
-  // useEffect(() => {
-  //   // Update the state whenever token changes
-  //   setIsLoggedIn(!!token);
-  //   console.log('2',!!token)
-  // },[token]);  // Depend on token
-
-  // Converts token to boolean
+  const { token, logOut, isLoggedIn } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    // setIsLoggedIn(false);
     console.log("Logout button clicked");
     logOut();
   };
-  const handleSignup=()=>{
-    navigate('/signup')
-  }
-  const handleLogin=()=>{
-    //setIsLoggedIn(true);
-    navigate('/login')
-  }
+
+  const handleSignup = () => {
+    navigate('/signup');
+  };
+
+  const handleLogin = () => {
+    navigate('/login');
+  };
 
   return (
     <Navbar bg="dark" variant="dark" expand="lg" className="mb-0">
@@ -96,16 +86,17 @@ const HeaderComponent = () => {
             <Nav.Link as={Link} to="/">Home</Nav.Link>
             {!isLoggedIn ? (
               <li>
-                <Button className="btn btn-color text-light me-2"onClick={handleLogin}>Login</Button>
-                <Button className="btn btn-color text-light me-2" onClick={handleSignup}>signup</Button>
+                <Button className="btn btn-color text-light me-2" onClick={handleLogin}>Login</Button>
+                <Button className="btn btn-color text-light me-2" onClick={handleSignup}>Signup</Button>
               </li>
-              
             ) : (
               <Button className="btn btn-color text-light me-2" onClick={handleLogout}>Logout</Button>
             )}
-            <div style={{ position: 'absolute', right: '20px', top: '10px' }}>
-              <ProfileIcon />
-            </div>
+            {isLoggedIn && ( // Only show ProfileIcon when logged in
+              <div style={{ position: 'absolute', right: '20px', top: '10px' }}>
+                <ProfileIcon />
+              </div>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>
