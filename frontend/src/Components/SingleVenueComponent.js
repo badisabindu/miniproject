@@ -16,9 +16,9 @@ function VenueComponent(){
                 const response=await fetch(`https://api.foursquare.com/v2/venues/${id}/?v=20231010&oauth_token=BMC2LNSFZWM3M1J4TXF1T1FEK1DIFZ4E5F5CCAITN4HBB4NU`, options);
                 const data=await response.json();
                 console.log(data.response);
+                setVenueName(data.response.venue.name);
                 const pic=data.response.venue.bestPhoto;
                 setImgUrl(pic.prefix+pic.height+"x"+pic.width+pic.suffix);
-                setVenueName(data.response.venue.name);
                 // console.log(venueName)
             }
             catch(err){
@@ -39,7 +39,7 @@ function VenueComponent(){
                         decoding="async"
                         className="img-fluid"
                     />
-                    <h2 className="d-flex justify-content-center align-items-center">{venueName}</h2>
+                    <Card.Title className="d-flex justify-content-center align-items-center">{venueName}</Card.Title>
                     
                 </Card>
             </div>        
