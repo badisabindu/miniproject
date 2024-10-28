@@ -1,32 +1,54 @@
-// src/Components/ProfileEditPage.js
-import React, { useState } from 'react';
-import {  Form, Button, Alert } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Form, Button, Alert, Spinner } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
 
 const ProfileEditComponent = () => {
-  // Initial state (this could be fetched from an API in a real application)
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-  });
-
-  // State for handling form submission
+  const [formData, setFormData] = useState({ username: '', email: '' });
+  const [user, setUser] = useState(null); // Initialize as null
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Handle input changes
+  const token = localStorage.getItem('token'); // Get token once
+
+  // Fetch user data from localStorage and API
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        if (!storedUser || !storedUser._id) {
+          throw new Error('User data is not available.');
+        }
+        setUser(storedUser); // Set the user state
+
+        const response = await axios.get(`http://localhost:5000/api/user/${storedUser._id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setFormData(response.data); // Set form data with API response
+      } catch (err) {
+        setError(err.message || 'Failed to load user details.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserDetails();
+  }, [token]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Perform validation
-    if (!formData.name || !formData.email) {
-      setError('Both name and email are required.');
+
+    if (!formData.username || !formData.email) {
+      setError('Both username and email are required.');
       return;
     }
 
@@ -35,12 +57,23 @@ const ProfileEditComponent = () => {
       return;
     }
 
-    // Simulate a successful form submission
-    setError('');
-    setSuccess('Profile updated successfully!');
-    
-    // In a real application, you would also send the data to a server here
-    console.log('Updated Profile Data:', formData);
+    try {
+      const response = await axios.put(
+        `http://localhost:5000/api/user/${user._id}`,
+        formData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      // Update localStorage with the new user data
+      const updatedUser = { ...user, ...response.data };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+
+      setUser(updatedUser); // Update state with the new user data
+      setSuccess('Profile updated successfully!');
+      setError('');
+    } catch (err) {
+      setError('Failed to update profile.');
+    }
   };
 
   return (
@@ -56,35 +89,43 @@ const ProfileEditComponent = () => {
     >
       <div className="bg-white p-4 rounded shadow" style={{ width: '100%', maxWidth: '400px' }}>
         <h1 className="text-muted mb-4 text-center">Edit Your Profile</h1>
+
         {error && <Alert variant="danger">{error}</Alert>}
         {success && <Alert variant="success">{success}</Alert>}
-        <Form onSubmit={handleSubmit}>
-          <Form.Group controlId="formName">
-            <Form.Label>Name</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter your name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-            />
-          </Form.Group>
 
-          <Form.Group controlId="formEmail" className="mt-3">
-            <Form.Label>Email address</Form.Label>
-            <Form.Control
-              type="email"
-              placeholder="Enter your email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </Form.Group>
+        {loading ? (
+          <div className="d-flex justify-content-center">
+            <Spinner animation="border" variant="primary" />
+          </div>
+        ) : (
+          <Form onSubmit={handleSubmit}>
+            <Form.Group controlId="formUsername">
+              <Form.Label>Username</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter your username"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+              />
+            </Form.Group>
 
-          <Button variant="primary" type="submit" className="mt-3">
-            Save Changes
-          </Button>
-        </Form>
+            <Form.Group controlId="formEmail" className="mt-3">
+              <Form.Label>Email address</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="Enter your email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </Form.Group>
+
+            <Button variant="primary" type="submit" className="mt-3">
+              Save Changes
+            </Button>
+          </Form>
+        )}
       </div>
     </div>
   );

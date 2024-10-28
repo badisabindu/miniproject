@@ -24,6 +24,7 @@ function LoginComponent() {
             password,
           });
           console.log(response)
+          localStorage.setItem('user',JSON.stringify(response.data.user));
           localStorage.setItem('userId',response.data.id);
           localStorage.setItem('token', response.data.token);
           setIsLoggedIn(true)

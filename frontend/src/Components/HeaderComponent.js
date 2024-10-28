@@ -1,80 +1,30 @@
-
-
-// // src/Components/HeaderComponent.js
-// import React, { useState } from 'react';
-// import { Link } from 'react-router-dom';
-// import { Navbar, Nav, Container } from 'react-bootstrap';
-// import ProfileIcon from './ProfileIconComponent';
-// import { useEffect } from 'react';
-// import { useAuth } from './AuthProvider';
-
-// const HeaderComponent = () => {
-//   const { token} = useAuth();
-//     const[isLoggedIn,setIsLoggedIn]=useState(false)
-//     // useEffect(() => {
-//     //     const token = localStorage.getItem('token'); // Replace with your actual token retrieval logic
-//     //     if (token) {
-//     //       setIsLoggedIn(true);
-//     //       console.log(isLoggedIn);
-//     //     } else {
-//     //       setIsLoggedIn(false);
-//     //       console.log(isLoggedIn);
-//     //     }
-//     //   }, [token]);
-//       const  {logOut}  = useAuth();
-//       const handleLogout = () => {
-//           console.log("Logout button clicked");
-//           logOut();
-//       };
-
-//   return (
-//     <Navbar bg="dark" variant="dark" expand="lg" className="mb-0">
-//       <Container>
-//         <Navbar.Brand as={Link} to="/">Smart City</Navbar.Brand>
-//         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-//         <Navbar.Collapse id="basic-navbar-nav">
-//           <Nav className="ml-auto">
-//             <Nav.Link as={Link} to="/">Home</Nav.Link>
-//              {!isLoggedIn ? (
-//                         <li>
-//                            <Link to="/login" className="btn btn-color text-light me-2">Login</Link>
-//                         </li>
-//                     ) : <li>
-//                     <Link to="/" className="btn btn-color text-light me-2" onClick={handleLogout}>Logout</Link>
-//                  </li>}
-//                <div style={{ position: 'absolute', right: '20px', top: '10px' }}>
-//                   <ProfileIcon />
-//               </div>
-//           </Nav>
-//         </Navbar.Collapse>
-//       </Container>
-//     </Navbar>
-//   );
-// };
-
-// export default HeaderComponent;
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Navbar, Nav, Container, Button } from 'react-bootstrap';
-import ProfileIcon from './ProfileIconComponent'; // Make sure this path is correct
+import { Navbar, Nav, Container, Button, Dropdown } from 'react-bootstrap';
 import { useAuth } from './AuthProvider';
 
 const HeaderComponent = () => {
-  const { token, logOut, isLoggedIn } = useAuth();
+  const { logOut, isLoggedIn } = useAuth();
   const navigate = useNavigate();
+  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 992);
+
+  // Handle window resize to update screen size state
+  useEffect(() => {
+    const handleResize = () => setIsSmallScreen(window.innerWidth < 992);
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleLogout = () => {
     console.log("Logout button clicked");
     logOut();
   };
 
-  const handleSignup = () => {
-    navigate('/signup');
-  };
-
-  const handleLogin = () => {
-    navigate('/login');
-  };
+  const handleSignup = () => navigate('/signup');
+  const handleLogin = () => navigate('/login');
+  const handleProfile = () => navigate('/profile-edit');
+  const handleHome = () => navigate('/city');
 
   return (
     <Navbar bg="dark" variant="dark" expand="lg" className="mb-0">
@@ -82,20 +32,50 @@ const HeaderComponent = () => {
         <Navbar.Brand as={Link} to="/">Smart City</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="ml-auto">
-            <Nav.Link as={Link} to="/">Home</Nav.Link>
+          <Nav className="ms-auto align-items-center">
             {!isLoggedIn ? (
-              <li>
-                <Button className="btn btn-color text-light me-2" onClick={handleLogin}>Login</Button>
-                <Button className="btn btn-color text-light me-2" onClick={handleSignup}>Signup</Button>
-              </li>
+              <>
+                <Button 
+                  className="btn btn-color text-light me-2 mb-2 mb-lg-0" 
+                  onClick={handleLogin}>
+                  Login
+                </Button>
+                <Button 
+                  className="btn btn-color text-light me-2 mb-2 mb-lg-0" 
+                  onClick={handleSignup}>
+                  Signup
+                </Button>
+              </>
+            ) : isSmallScreen ? (
+              // Render plain links for small screens
+              <>
+                <Nav.Link as={Link} to="/city" className="text-light">
+                  Home
+                </Nav.Link>
+                <Nav.Link as={Link} to="/profile-edit" className="text-light">
+                  Profile
+                </Nav.Link>
+                <Nav.Link onClick={handleLogout} className="text-light">
+                  Logout
+                </Nav.Link>
+              </>
             ) : (
-              <Button className="btn btn-color text-light me-2" onClick={handleLogout}>Logout</Button>
-            )}
-            {isLoggedIn && ( // Only show ProfileIcon when logged in
-              <div style={{ position: 'absolute', right: '20px', top: '10px' }}>
-                <ProfileIcon />
-              </div>
+              // Render dropdown for larger screens
+              <Dropdown align="end" className="me-3">
+                <Dropdown.Toggle 
+                  variant="link" 
+                  id="dropdown-profile-icon" 
+                  style={{ border: 'none', boxShadow: 'none' }}
+                >
+                  <i className="bi bi-person-circle" style={{ fontSize: '1.75rem', color: "#ffffff" }}></i>
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={handleHome}>Home</Dropdown.Item>
+                  <Dropdown.Item onClick={handleProfile}>Profile</Dropdown.Item>
+                  <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             )}
           </Nav>
         </Navbar.Collapse>
